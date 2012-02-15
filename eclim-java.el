@@ -468,4 +468,17 @@ method."
   (when eclim-auto-save (save-buffer))
   (eclim--java-complete-internal (mapcar 'second (eclim/java-complete))))
 
+(defun eclim-java-method-signature-at-point ()
+  (interactive)
+  (when eclim-auto-save (save-buffer))
+  (let ((completion (eclim/execute-command
+                     (concat "java_complete"
+                       " -p " (eclim--project-name)
+                       " -f " (eclim--project-current-file)
+                       " -o " (number-to-string (point))
+                       " -e " (eclim--current-encoding)
+                       " -l standard"))))
+    (cond ((= (length completion) 1)
+      (third (split-string (car completion) "|"))))))
+
 (provide 'eclim-java)
